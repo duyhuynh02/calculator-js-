@@ -35,6 +35,21 @@ let queue = [firstNumber];
 
 const equalBtn = document.getElementById('equal');
 const clearBtn = document.getElementById('CLEAR'); 
+const deleteBtn = document.getElementById('DELETE');
+
+deleteBtn.addEventListener("click", () => {
+    let lastElement = queue[queue.length - 1]; 
+    if (typeof(lastElement) === 'number') {
+        lastElement = Math.floor(lastElement / 10); 
+        displayValue.textContent = lastElement; 
+        queue.pop();
+        queue.push(lastElement)
+    }
+    else {
+        queue.pop();
+    }
+})
+
 
 clearBtn.addEventListener("click", () => {
     queue.length = 0;
@@ -57,25 +72,28 @@ equalBtn.addEventListener("click", () => {
 buttons.forEach((button) => {
     button.addEventListener("click", () => {
         // If the value of button in number list: 
+        let lastElement = queue[queue.length - 1]; 
         if (button.textContent in numList) {
-            if (typeof(queue[queue.length - 1]) === 'number' && queue.length === 1) {
-                firstNumber = firstNumber * 10 + Number(button.textContent);
-                displayValue.textContent = firstNumber; 
+            if (typeof(lastElement) === 'number' && queue.length === 1) {
+                lastElement = lastElement * 10 + Number(button.textContent);
+                displayValue.textContent = lastElement; 
                 queue.pop();
-                queue.push(firstNumber)
+                queue.push(lastElement)
             }
             else {
-                if (typeof(queue[queue.length - 1]) !== 'number'){
-                    queue.push(nextNumber);
-                }   
-                nextNumber = nextNumber * 10 + Number(button.textContent);
-                displayValue.textContent = nextNumber; 
+                if (typeof(lastElement) !== 'number'){
+                    queue.push(0);
+                    lastElement = queue[queue.length - 1];
+                }  
+                lastElement = lastElement * 10 + Number(button.textContent);
+                displayValue.textContent = lastElement; 
                 queue.pop(); 
-                queue.push(nextNumber);
+                queue.push(lastElement);
             }
         }
         else {
-            if (button.textContent !== '=' && button.textContent !== 'CLEAR') {
+            if (button.textContent !== '=' && button.textContent !== 'CLEAR' 
+                    && button.textContent != 'DELETE') {
                 operator = button.textContent;
                 if (typeof(queue[queue.length - 1]) === 'number') {
                     queue.push(operator);
