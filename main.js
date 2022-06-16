@@ -40,10 +40,18 @@ const deleteBtn = document.getElementById('DELETE');
 deleteBtn.addEventListener("click", () => {
     let lastElement = queue[queue.length - 1]; 
     if (typeof(lastElement) === 'number') {
-        lastElement = Math.floor(lastElement / 10); 
-        displayValue.textContent = lastElement; 
-        queue.pop();
-        queue.push(lastElement)
+        if (lastElement >= 0) {
+            lastElement = Math.floor(lastElement / 10); 
+            displayValue.textContent = lastElement; 
+            queue.pop();
+            queue.push(lastElement)
+        }
+        else {
+            lastElement = Math.ceil(lastElement / 10); 
+            displayValue.textContent = lastElement; 
+            queue.pop();
+            queue.push(lastElement)
+        }
     }
     else {
         queue.pop();
@@ -75,10 +83,18 @@ buttons.forEach((button) => {
         let lastElement = queue[queue.length - 1]; 
         if (button.textContent in numList) {
             if (typeof(lastElement) === 'number' && queue.length === 1) {
-                lastElement = lastElement * 10 + Number(button.textContent);
-                displayValue.textContent = lastElement; 
-                queue.pop();
-                queue.push(lastElement)
+                if (lastElement >= 0) {
+                    lastElement = lastElement * 10 + Number(button.textContent);
+                    displayValue.textContent = lastElement; 
+                    queue.pop();
+                    queue.push(lastElement)
+                }
+                else {
+                    lastElement = Math.ceil(lastElement * 10) - Number(button.textContent);
+                    displayValue.textContent = lastElement; 
+                    queue.pop();
+                    queue.push(lastElement)
+                }
             }
             else {
                 if (typeof(lastElement) !== 'number'){
