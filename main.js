@@ -71,7 +71,8 @@ clearBtn.addEventListener("click", () => {
 equalBtn.addEventListener("click", () => {
     const result = operate(queue[0], queue[1], queue[2]);
     displayValue.textContent = result; 
-    queue.length = 0; 
+    // queue.length = 0;
+    queue.splice(0, 2); 
     firstNumber = 0;
     nextNumber = 0;
     queue[0] = result;
@@ -111,7 +112,14 @@ buttons.forEach((button) => {
             if (button.textContent !== '=' && button.textContent !== 'CLEAR' 
                     && button.textContent != 'DELETE') {
                 operator = button.textContent;
-                if (typeof(queue[queue.length - 1]) === 'number') {
+                if (typeof(queue[queue.length - 1]) === 'number' && queue.length == 1) {
+                    queue.push(operator);
+                }
+                else {
+                    const result = operate(queue[0], queue[1], queue[2]);
+                    displayValue.textContent = result; 
+                    queue.splice(0, 2); 
+                    queue[0] = result;
                     queue.push(operator);
                 }
             }
