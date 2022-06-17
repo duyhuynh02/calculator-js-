@@ -11,6 +11,10 @@ function multiply(num1, num2) {
 }
 
 function divide(num1, num2) {
+    if (num2 === 0) {
+        alert("You tried to divide by 0. Try again");
+        document.location.reload(true);
+    }
     return num1 / num2; 
 }
 
