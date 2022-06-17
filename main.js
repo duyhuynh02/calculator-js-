@@ -80,6 +80,8 @@ clearBtn.addEventListener("click", () => {
     operator = '';
     queue = [firstNumber];
     displayValue.textContent = 0; 
+    isDot = false; 
+    countDot = 0;
 })
 
 equalBtn.addEventListener("click", () => {
