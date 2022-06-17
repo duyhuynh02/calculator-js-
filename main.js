@@ -1,3 +1,19 @@
+//Global variables 
+const numList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+const buttons = document.querySelectorAll('button');
+let displayValue = document.querySelector('.result-display');
+let operator = '';
+let queue = [0];    //First number in queue is 0 
+let isDot = false; 
+let countDot = 0; 
+
+//Event button 
+const equalBtn = document.getElementById('equal');
+const clearBtn = document.getElementById('CLEAR'); 
+const deleteBtn = document.getElementById('DELETE');
+const dotBtn = document.getElementById('dot');
+
+//Function 
 function add(num1, num2) {
     return num1 + num2; 
 }
@@ -29,75 +45,60 @@ function operate(num1, opt, num2) {
     }
 }
 
-const numList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-const buttons = document.querySelectorAll('button');
-let displayValue = document.querySelector('.result-display');
-let firstNumber = 0;
-let nextNumber = 0;
-let operator = '';
-let queue = [firstNumber];
-let isDot = false; 
-let countDot = 0; 
-
-const equalBtn = document.getElementById('equal');
-const clearBtn = document.getElementById('CLEAR'); 
-const deleteBtn = document.getElementById('DELETE');
-const dotBtn = document.getElementById('dot');
-
-dotBtn.addEventListener("click", () => {
-    isDot = true;
-    if (countDot < 1) {
-        displayValue.textContent += '.';
-    }
-})
-
-deleteBtn.addEventListener("click", () => {
+function deleteOperand() {
     let lastElement = queue[queue.length - 1]; 
     if (typeof(lastElement) === 'number') {
-        if (lastElement >= 0) {
-            lastElement = Math.floor(lastElement / 10); 
-            displayValue.textContent = lastElement; 
-            queue.pop();
-            queue.push(lastElement)
-        }
-        else {
-            lastElement = Math.ceil(lastElement / 10); 
-            displayValue.textContent = lastElement; 
-            queue.pop();
-            queue.push(lastElement)
-        }
+        if (lastElement >= 0) { lastElement = Math.floor(lastElement / 10); }
+        else { lastElement = Math.ceil(lastElement / 10); }            
+        displayValue.textContent = lastElement; 
+        queue.pop();
+        queue.push(lastElement)
     }
     else {
         queue.pop();
     }
-})
+}
 
-
-clearBtn.addEventListener("click", () => {
+function clearBoard() {
     queue.length = 0;
-    firstNumber = 0;
-    nextNumber = 0;
     operator = '';
-    queue = [firstNumber];
+    queue = [0];
     displayValue.textContent = 0; 
     isDot = false; 
     countDot = 0;
-})
+}
 
-equalBtn.addEventListener("click", () => {
+function addDot() {
+    isDot = true;
+    if (countDot < 1) {
+        displayValue.textContent += '.';
+    }
+}
+
+function equal() {
     if (queue.length < 3) {
         alert('Error - we need two operands for an operation.'); 
         document.location.reload(true);
     }
     const result = operate(queue[0], queue[1], queue[2]);
     displayValue.textContent = result; 
-    // queue.length = 0;
     queue.splice(0, 2); 
-    firstNumber = 0;
-    nextNumber = 0;
     queue[0] = result;
-})
+}
 
+function operateOnQueue(lastElement) {
+    queue.pop();
+    queue.push(lastElement)
+}
+
+
+//Event button actual work 
+dotBtn.addEventListener("click", addDot);
+deleteBtn.addEventListener("click", deleteOperand);
+clearBtn.addEventListener("click", clearBoard);
+equalBtn.addEventListener("click", equal);
+
+//Main board 
 buttons.forEach((button) => {
     button.addEventListener("click", () => {
         // If the value of button in number list: 
@@ -107,16 +108,12 @@ buttons.forEach((button) => {
                 if (typeof(lastElement) === 'number' && queue.length === 1) {
                     if (lastElement >= 0) {
                         lastElement = lastElement * 10 + Number(button.textContent);
-                        displayValue.textContent = lastElement; 
-                        queue.pop();
-                        queue.push(lastElement)
                     }
                     else {
                         lastElement = Math.ceil(lastElement * 10) - Number(button.textContent);
-                        displayValue.textContent = lastElement; 
-                        queue.pop();
-                        queue.push(lastElement)
                     }
+                    displayValue.textContent = lastElement; 
+                    operateOnQueue(lastElement);
                 }
                 else {
                     if (typeof(lastElement) !== 'number'){
@@ -125,23 +122,21 @@ buttons.forEach((button) => {
                     }  
                     lastElement = lastElement * 10 + Number(button.textContent);
                     displayValue.textContent = lastElement; 
-                    queue.pop(); 
-                    queue.push(lastElement);
+                    operateOnQueue(lastElement);
                 }
             }
             else {
                 if (typeof(lastElement) === 'number') {
                     if (countDot < 1) {
                         lastElement = lastElement.toString() + '.' + button.textContent; 
-                        // displayValue.textContent += button.textContent
                         countDot += 1;
                     }
                     else {
                         lastElement = lastElement.toString() + button.textContent;
                     }
-                    displayValue.textContent += button.textContent
+                    displayValue.textContent += button.textContent;
                     queue.pop();
-                    queue.push(Number(lastElement))
+                    queue.push(Number(lastElement));
                 }
             }
         }
@@ -163,6 +158,7 @@ buttons.forEach((button) => {
                 countDot = 0;
             }
         }
+        //For debugging
         console.log(queue);
 }
     )
