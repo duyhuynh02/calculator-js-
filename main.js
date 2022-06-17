@@ -13,7 +13,7 @@ const clearBtn = document.getElementById('CLEAR');
 const deleteBtn = document.getElementById('DELETE');
 const dotBtn = document.getElementById('dot');
 
-//Function 
+//Arithmetic function & the general one. 
 function add(num1, num2) {
     return num1 + num2; 
 }
@@ -45,16 +45,21 @@ function operate(num1, opt, num2) {
     }
 }
 
+function isDotInclude(element) {
+    return element.toString().includes('.')
+}
+
+//Delete every operands e.g., 431 => 43 => 4 => 0 and so on. 
 function deleteOperand() {
     let lastElement = queue[queue.length - 1]; 
     if (typeof(lastElement) === 'number') {
-        if (!(lastElement.toString().includes('.'))){
+        if (!(isDotInclude(lastElement))){
             if (lastElement >= 0) { lastElement = Math.floor(lastElement / 10); }
             else { lastElement = Math.ceil(lastElement / 10); }            
         }
         else {
             lastElement = Number(lastElement.toString().slice(0, -1));
-            if (!lastElement.toString().includes('.')) {
+            if (!(isDotInclude(lastElement))) { // Make sure when you backspace the dot, you have to set it to the initial stage 
                 isDot = false; 
                 countDot = 0; 
             }
@@ -71,6 +76,7 @@ function changeDisplayValue(lastElement) {
     displayValue.textContent = lastElement;
 }
 
+//Set all the stage go back to the initial. 
 function clearBoard() {
     queue.length = 0;
     operator = '';
@@ -80,6 +86,7 @@ function clearBoard() {
     countDot = 0;
 }
 
+//Turn the operand to string then add the dot 
 function addDot() {
     isDot = true;
     if (countDot < 1) {
@@ -124,7 +131,7 @@ buttons.forEach((button) => {
                     else {
                         lastElement = Math.ceil(lastElement * 10) - Number(button.textContent);
                     }
-                    displayValue.textContent = lastElement; 
+                    changeDisplayValue(lastElement)
                     operateOnQueue(lastElement);
                 }
                 else {
@@ -133,7 +140,7 @@ buttons.forEach((button) => {
                         lastElement = queue[queue.length - 1];
                     }  
                     lastElement = lastElement * 10 + Number(button.textContent);
-                    displayValue.textContent = lastElement; 
+                    changeDisplayValue(lastElement)
                     operateOnQueue(lastElement);
                 }
             }
