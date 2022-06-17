@@ -69,6 +69,10 @@ clearBtn.addEventListener("click", () => {
 })
 
 equalBtn.addEventListener("click", () => {
+    if (queue.length < 3) {
+        alert('Error - we need two operands for an operation.'); 
+        document.location.reload(true);
+    }
     const result = operate(queue[0], queue[1], queue[2]);
     displayValue.textContent = result; 
     // queue.length = 0;
@@ -115,7 +119,7 @@ buttons.forEach((button) => {
                 if (typeof(queue[queue.length - 1]) === 'number' && queue.length == 1) {
                     queue.push(operator);
                 }
-                else {
+                if (typeof(queue[queue.length - 1]) === 'number' && queue.length > 2){
                     const result = operate(queue[0], queue[1], queue[2]);
                     displayValue.textContent = result; 
                     queue.splice(0, 2); 
