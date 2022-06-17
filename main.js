@@ -48,15 +48,27 @@ function operate(num1, opt, num2) {
 function deleteOperand() {
     let lastElement = queue[queue.length - 1]; 
     if (typeof(lastElement) === 'number') {
-        if (lastElement >= 0) { lastElement = Math.floor(lastElement / 10); }
-        else { lastElement = Math.ceil(lastElement / 10); }            
-        displayValue.textContent = lastElement; 
-        queue.pop();
-        queue.push(lastElement)
+        if (!(lastElement.toString().includes('.'))){
+            if (lastElement >= 0) { lastElement = Math.floor(lastElement / 10); }
+            else { lastElement = Math.ceil(lastElement / 10); }            
+        }
+        else {
+            lastElement = Number(lastElement.toString().slice(0, -1));
+            if (!lastElement.toString().includes('.')) {
+                isDot = false; 
+                countDot = 0; 
+            }
+        }
+        changeDisplayValue(lastElement);
+        operateOnQueue(lastElement);
     }
     else {
         queue.pop();
     }
+}
+
+function changeDisplayValue(lastElement) {
+    displayValue.textContent = lastElement;
 }
 
 function clearBoard() {
@@ -98,7 +110,7 @@ deleteBtn.addEventListener("click", deleteOperand);
 clearBtn.addEventListener("click", clearBoard);
 equalBtn.addEventListener("click", equal);
 
-//Main board 
+//Main
 buttons.forEach((button) => {
     button.addEventListener("click", () => {
         // If the value of button in number list: 
